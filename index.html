@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Array Method</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        line-height: 200%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 40px;
+        gap: 40px;
+      }
+      .container {
+        display: flex;
+        gap: 12px;
+      }
+      input {
+        padding: 4px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input type="text" id="input" placeholder="Enter text" required />
+      <input type="submit" id="push" value="Push" />
+      <input type="submit" id="pop" value="Pop" />
+      <input type="submit" id="shift" value="Shift" />
+      <input type="submit" id="unshift" value="Unshift" />
+    </div>
+
+    <ul class="list"></ul>
+
+    <script>
+      const input = document.querySelector('#input');
+      const pushBtn = document.querySelector('#push');
+      const popBtn = document.querySelector('#pop');
+      const shiftBtn = document.querySelector('#shift');
+      const unshiftBtn = document.querySelector('#unshift');
+      const list = document.querySelector('.list');
+      var arr = ['Eggs', 'Bread', 'dsfgs'];
+      var html = '';
+
+      // for (let i = 0; i < arr.length; i++) {
+      //   html += '<li>' + arr[i] + '</li>';
+      //   list.innerHTML = html;
+      // }
+
+      // I dont know the best solution to show the array child inside the page
+      // I tried loop but it will add content more than what we need after every push, pop, shift and unshift.
+      // Thats why I used Line break <br>
+
+      list.innerHTML = arr.join('<br>');
+
+      pushBtn.addEventListener('click', function (e) {
+        const value = input.value;
+        if (value) {
+          const array = arr.push(value);
+          list.innerHTML = arr.join('<br>');
+          input.value = '';
+        } else {
+          alert('Please Enter a value');
+        }
+      });
+      popBtn.addEventListener('click', function (e) {
+        if (arr.length == 0) {
+          alert('There Is no item to remove');
+        } else {
+          const value = input.value;
+          const array = arr.pop(value);
+          list.innerHTML = arr.join('<br>');
+          input.value = '';
+        }
+      });
+      shiftBtn.addEventListener('click', function (e) {
+        if (arr.length == 0) {
+          alert('There Is no item to remove');
+        } else {
+          const value = input.value;
+          const array = arr.shift(value);
+          list.innerHTML = arr.join('<br>');
+          input.value = '';
+        }
+      });
+      unshiftBtn.addEventListener('click', function (e) {
+        const value = input.value;
+        if (value) {
+          const array = arr.unshift(value);
+          list.innerHTML = arr.join('<br>');
+          input.value = '';
+        } else {
+          alert('Please Enter a value');
+        }
+      });
+    </script>
+  </body>
+</html>
