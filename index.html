@@ -12,8 +12,13 @@
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         line-height: 200%;
       }
+      html{
+        display: grid;
+        place-items: center;
+      }
       body {
         display: flex;
+        width: fit-content;
         flex-direction: column;
         justify-content: center;
         padding: 40px;
@@ -22,10 +27,22 @@
       .container {
         display: flex;
         gap: 12px;
-      }
+      } 
       input {
         padding: 4px 16px;
       }
+      ul{
+        display:flex;
+        flex-direction: column;
+        gap: 8px;}
+      li{
+        background-color: rgb(225, 225, 225);
+        list-style: none;
+        padding: 8px 16px;
+        border:solid 1px black;
+      }
+
+
     </style>
   </head>
   <body>
@@ -46,25 +63,24 @@
       const shiftBtn = document.querySelector('#shift');
       const unshiftBtn = document.querySelector('#unshift');
       const list = document.querySelector('.list');
-      var arr = ['Eggs', 'Bread', 'dsfgs'];
-      var html = '';
+      var arr = ['Eggs', 'Bread', 'Butter'];
+      
 
-      // for (let i = 0; i < arr.length; i++) {
-      //   html += '<li>' + arr[i] + '</li>';
-      //   list.innerHTML = html;
-      // }
+      //  Show <li> elements
+      function updateHtml() {
+        list.innerHTML = arr.map(function(item) {
+  return `<li>${item}</li>`;
+}).join('');
+      }
 
-      // I dont know the best solution to show the array child inside the page
-      // I tried loop but it will add content more than what we need after every push, pop, shift and unshift.
-      // Thats why I used Line break <br>
-
-      list.innerHTML = arr.join('<br>');
+      // Initial update
+      updateHtml();
 
       pushBtn.addEventListener('click', function (e) {
         const value = input.value;
         if (value) {
-          const array = arr.push(value);
-          list.innerHTML = arr.join('<br>');
+          arr.push(value);
+          updateHtml();
           input.value = '';
         } else {
           alert('Please Enter a value');
@@ -74,9 +90,8 @@
         if (arr.length == 0) {
           alert('There Is no item to remove');
         } else {
-          const value = input.value;
-          const array = arr.pop(value);
-          list.innerHTML = arr.join('<br>');
+          arr.pop();
+          updateHtml();
           input.value = '';
         }
       });
@@ -84,17 +99,16 @@
         if (arr.length == 0) {
           alert('There Is no item to remove');
         } else {
-          const value = input.value;
-          const array = arr.shift(value);
-          list.innerHTML = arr.join('<br>');
+          arr.shift();
+          updateHtml();
           input.value = '';
         }
       });
       unshiftBtn.addEventListener('click', function (e) {
         const value = input.value;
         if (value) {
-          const array = arr.unshift(value);
-          list.innerHTML = arr.join('<br>');
+          arr.unshift(value);
+          updateHtml();
           input.value = '';
         } else {
           alert('Please Enter a value');
