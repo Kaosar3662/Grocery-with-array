@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple Sound Bar</title>
+    <style>
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #bar {
+        width: 300px;
+        height: 6px;
+        background: #ccc;
+        position: relative;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      #knob {
+        width: 14px;
+        height: 14px;
+        background: #000;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%; /* Start in center */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bar">
+      <div id="knob"></div>
+    </div>
+
+    <script>
+      const bar = document.getElementById("bar");
+      const knob = document.getElementById("knob");
+      let isDragging = false;
+
+      function setPosition(x) {
+        const rect = bar.getBoundingClientRect();
+        let newX = x - rect.left; // mouse position relative to bar
+        newX = Math.max(0, Math.min(rect.width, newX)); // clamp between 0–bar width
+        knob.style.left = newX + "px";
+      }
+
+      bar.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        setPosition(e.clientX);
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (isDragging) setPosition(e.clientX);
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+      });
+    </script>
+  </body>
+</html>
