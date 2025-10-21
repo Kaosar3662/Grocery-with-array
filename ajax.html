@@ -1,1 +1,79 @@
-Write ajax code here
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0px;
+        margin: 0px;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 50px;
+      }
+      .top {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 50px;
+      }
+      button,
+      input {
+        padding: 8px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="postBtn">Post</button>
+    <button class="getBtn">Get</button>
+
+    <script>
+      let getBtn = document.querySelector('.getBtn'),
+        postBtn = document.querySelector('.postBtn');
+
+      getBtn.addEventListener('click', fetchItems);
+      postBtn.addEventListener('click', putItems);
+      function fetchItems() {
+        const kaosar = new XMLHttpRequest();
+        console.log('Something happening');
+        kaosar.open(
+          'GET',
+          'https://dummy.restapiexample.com/api/v1/employees',
+          true
+        );
+        kaosar.onprogress = function () {
+          // Do A Loader
+        };
+        kaosar.onload = function () {
+          console.log(this.responseText);
+        };
+        kaosar.send();
+      }
+
+      function putItems() {
+        const kaosar = new XMLHttpRequest();
+        console.log('Something happening');
+        kaosar.open(
+          'POST',
+          'https://dummy.restapiexample.com/api/v1/create',
+          true
+        );
+        kaosar.getResponseHeader('content-type', 'application/json');
+        kaosar.onprogress = function () {
+          // Do A Loader
+        };
+        kaosar.onload = function () {
+          console.log(this.responseText);
+        };
+        let name = 'kaosar' + Math.floor(Math.random() * 100000);
+        staffToSend = { 'name': `${name}`, salary: '2222', age: '5555' };
+        kaosar.send(staffToSend);
+      }
+    </script>
+  </body>
+</html>
