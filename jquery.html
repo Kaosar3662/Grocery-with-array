@@ -201,6 +201,9 @@
       $(window).on('load', function () {
         $('#events').text('Page fully loaded!');
       });
+      $(window).on('resize', function () {
+        $('#events').text(`Window resized`);
+      });
 
       $(window).on('scroll', function () {
         $('#events').text(`Scrolling`);
