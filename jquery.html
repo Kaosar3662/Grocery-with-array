@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jquery</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0px;
+        margin: 0px;
+        width: fit-content;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        padding: 50px;
+      }
+      .top {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+      button,
+      input {
+        padding: 8px 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <button id="get">GET</button>
+      <button id="post">POST</button>
+      <button id="put">PUT</button>
+      <button id="delete">DELETE</button>
+    </div>
+    <div class="showdata"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+      // let randomNum = Math.floor(Math.random() * 293381)
+      //   .toString()
+      //   .padStart(6, '0');
+      // let randomId =
+      //   `https://api.restful-api.dev/objects/ff8081819782e69e019a0f1f8f` +
+      //   randomNum;
+      //   console.log(randomId)
+
+      let newId = "ff8081819782e69e019a0f379aa933a0"
+
+      $('#get').click(function () {
+        $.ajax({
+          url: 'https://api.restful-api.dev/objects/ff8081819782e69e019a0f1f8f293389',
+          method: 'GET',
+          success: function (data) {
+            console.log(data);
+            $('.showdata').html(
+              `<span style="color: green;">GET request successful!</span> <br>Name: ${data.name}<br>Id Number:${data.id}`
+            );
+          },
+          error: function () {
+            console.log('Something went wrong try again.');
+            $('.showdata').html(
+              `<span style="color: red;">Something went wrong, try again</span>`
+            );
+          },
+        });
+      });
+      $('#post').click(function () {
+        $.ajax({
+          url: 'https://api.restful-api.dev/objects',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({
+            name: 'kaosar3662',
+            data: {
+              year: 2003,
+              price: 999999999.99,
+              'CPU model': 'Hard Core',
+              'Hard disk size': '100000000 TB',
+            },
+          }),
+          // success: function (resposeData) {
+          //   $('.showdata').html(
+          //     `<span style="color: green;">POST request successful!</span><br>Your data ID:${resposeData.id}`
+          //   );
+          //   console.log('POST request successful.');
+          //   console.log(resposeData);
+          // },
+          success: function (responseData) {
+            $('.showdata').html(
+              `<span style="color: green;">POST request successful!</span><br><pre>${JSON.stringify(
+                responseData,
+                null,
+                2
+              )}</pre>`
+            );
+            console.log('POST request successful.');
+            console.log(responseData);
+          },
+          error: function () {
+            $('.showdata').html(
+              '<span style="color: red;">POST request failed.</span>'
+            );
+            console.log('POST request failed.');
+          },
+        });
+      });
+      $('#put').click(function () {
+        $.ajax({
+          url: `https://api.restful-api.dev/objects/ff8081819782e69e019a0f1f8f293389`,
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify({
+            name: 'kaosar3662',
+            data: {
+              year: 2003,
+              price: 999999999.99,
+              'CPU model': 'Hard Core',
+              'Hard disk size': '100000000 TB',
+            },
+          }),
+          success: function (responseData) {
+            $('.showdata').html(
+              `<span style="color: green;">PUT request successful!</span><br><pre>${JSON.stringify(
+                responseData,
+                null,
+                2
+              )}</pre>`
+            );
+            console.log('PUT request successful.');
+            console.log(responseData);
+          },
+          error: function () {
+            $('.showdata').html(
+              '<span style="color: red;">PUT request failed.</span>'
+            );
+            console.log('PUT request failed.');
+          },
+        });
+      });
+      $('#delete').click(function () {
+        $.ajax({
+          url: `https://api.restful-api.dev/objects/${newId}`,
+          method: 'DELETE',
+          success: function (response) {
+            $('.showdata').html(
+              `<span style="color: green;">DELETE request successful!</span><br>
+              Deleted data id:${newId} `
+            );
+            console.log('DELETE request successful.');
+            console.log(response);
+          },
+          error: function (error) {
+            $('.showdata').html(
+              '<span style="color: red;">DELETE request failed.</span>'
+            );
+            console.log('DELETE request failed.');
+            console.log(error);
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
