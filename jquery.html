@@ -12,13 +12,17 @@
         width: fit-content;
       }
       body {
+        position: relative;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: start;
         gap: 10px;
         padding: 50px;
+        min-height: 200vh;
       }
       .top {
+        position: sticky;
+        top: 50px;
         display: flex;
         justify-content: center;
         gap: 10px;
@@ -27,6 +31,7 @@
       input {
         padding: 8px 16px;
         cursor: pointer;
+        height: fit-content;
       }
     </style>
   </head>
@@ -36,8 +41,13 @@
       <button id="post">POST</button>
       <button id="put">PUT</button>
       <button id="delete">DELETE</button>
+      <button id="events">j-query-events</button>
+      <form id="myForm">
+        <input type="text" id="myInput" placeholder="Type something..." />
+        <button type="submit">Submit</button>
+      </form>
+      <div class="showdata"></div>
     </div>
-    <div class="showdata"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
@@ -49,7 +59,7 @@
       //   randomNum;
       //   console.log(randomId)
 
-      let newId = "ff8081819782e69e019a0f379aa933a0"
+      let newId = 'ff8081819782e69e019a0f379aa933a0';
 
       $('#get').click(function () {
         $.ajax({
@@ -149,7 +159,7 @@
           success: function (response) {
             $('.showdata').html(
               `<span style="color: green;">DELETE request successful!</span><br>
-              Deleted data id:${newId} `
+                    Deleted data id:${newId} `
             );
             console.log('DELETE request successful.');
             console.log(response);
@@ -162,6 +172,53 @@
             console.log(error);
           },
         });
+      });
+
+      $('#events').mouseenter(function () {
+        $(this).text('Btn mouse enter!');
+      });
+      $('#events').mouseleave(function () {
+        $(this).text('Btn mouse leave!');
+      });
+      $('#events').click(function () {
+        $(this).text('Button clicked!');
+      });
+      $('#events').dblclick(function () {
+        $(this).text('Button clicked*2');
+      });
+
+      $(document).keydown(function (e) {
+        $('#events').text(`Key down: ${e.key}`);
+      });
+
+      $(document).keyup(function (e) {
+        $('#events').text(`Key up: ${e.key}`);
+      });
+
+      $(document).keypress(function (e) {
+        $('#events').text(`Key pressed: ${e.key}`);
+      });
+      $(window).on('load', function () {
+        $('#events').text('Page fully loaded!');
+      });
+
+      $(window).on('scroll', function () {
+        $('#events').text(`Scrolling`);
+      });
+
+      $('#myInput').focus(function () {
+        $('.showdata').text('Input is focused!');
+      });
+
+      $('#myInput').blur(function () {
+        $('.showdata').text('Input lost focus!');
+      });
+
+      $('#myForm').submit(function (e) {
+        e.preventDefault();
+        $('.showdata').text(
+          `Form submitted with value: ${$('#myInput').val()}`
+        );
       });
     </script>
   </body>
