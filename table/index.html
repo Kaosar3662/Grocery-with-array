@@ -109,7 +109,8 @@
     </form>
 
     <div class="container">
-      <table><h1>Kaosar</h1>
+      <table>
+        <h1>Kaosar</h1>
         <thead>
           <tr class="heading">
             <th>Id</th>
@@ -122,94 +123,107 @@
         <tbody class="userInfo"></tbody>
       </table>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      // Select Items
-      var crossBtn = document.querySelector('.closeBtn'),
-        fName = document.getElementById('fName'),
-        email = document.getElementById('email'),
-        phone = document.getElementById('phone'),
-        userInfo = document.querySelector('.userInfo'),
-        table = document.querySelector('table');
-      submitBtn = document.querySelector('.submitBtn');
+      $(function () {
+        let $fName = $('#fName'),
+          $email = $('#email'),
+          $phone = $('#phone'),
+          $userInfo = $('.userInfo'),
+          $submitBtn = $('.submitBtn');
 
-      var mainData = localStorage.getItem('user')
-        ? JSON.parse(localStorage.getItem('user'))
-        : [];
-      Data = [...mainData];
-      isEdit = false;
-      editId = null;
-
-      function showInfo() {
-        userInfo.innerHTML = '';
-        if (Data.length === 0) {
-          userInfo.innerHTML = `<tr><td class="empty" colspan="6" align="center">No data available in table</td></tr>`;
-          return;
-        }
-
-        for (var i = 0; i < Data.length; i++) {
-          const staff = Data[i];
-          userInfo.innerHTML += `<tr class="employeeDetails">
-                  <td>${staff.id}</td>
-                  <td>${staff.Name}</td>
-                  <td>${staff.emailVal}</td>
-                  <td>${staff.phoneVal}</td>
-                  <td>
-                      <button onclick="editInfo(${i})">Edit</button>
-                      <button onclick="deleteInfo(${i})">Delete</button>
-                  </td>
-              </tr>`;
-        }
-      }
-
-      // Edit & Delete Functions
-      function editInfo(i) {
-        isEdit = true;
-        editId = i;
-        const staff = Data[i];
-        fName.value = staff.Name;
-        email.value = staff.emailVal;
-        phone.value = staff.phoneVal;
-        submitBtn.innerHTML = 'Update';
-      }
-
-      function deleteInfo(i) {
-
-          Data.splice(i, 1);
-          localStorage.setItem('user', JSON.stringify(Data));
-          showInfo();
-
-      }
-
-      document.getElementById('myForm').addEventListener('submit', e => {
-        e.preventDefault();
-        mainData = localStorage.getItem('user')
+        let mainData = localStorage.getItem('user')
           ? JSON.parse(localStorage.getItem('user'))
           : [];
-        Data = [...mainData];
-        if (Data.length == 0) {
-          idnumber = 1;
-        } else {
-          idnumber = Data[0].id + 1;
-        }
-        const information = {
-          id: idnumber,
-          Name: fName.value,
-          emailVal: email.value,
-          phoneVal: phone.value,
-        };
+        let Data = [...mainData];
+        let isEdit = false;
+        let editId = null;
 
-        if (isEdit && editId !== null) {
-          Data[editId] = information;
-        } else {
-          Data.unshift(information);
+        function showInfo() {
+          $userInfo.empty();
+          if (Data.length === 0) {
+            $userInfo.html(
+              '<tr><td class="empty" colspan="6" align="center">No data available in table</td></tr>'
+            );
+            return;
+          }
+
+          $.each(Data, function (i, information) {
+            let $tr = $('<tr class="employeeDetails">')
+              .append($('<td>').text(information.id))
+              .append($('<td>').text(information.Name))
+              .append($('<td>').text(information.emailVal))
+              .append($('<td>').text(information.phoneVal))
+              .append(
+                $('<td>').append(
+                  $('<button>')
+                    .text('Edit')
+                    .attr('onclick', `editUser(${i})`),
+                  ' ',
+                  $('<button>')
+                    .text('Delete')
+                    .attr('onclick', `deleteUser(${i})`)
+                )
+              );
+
+            $userInfo.append($tr);
+          });
         }
+
+        // Delegate edit / delete
+        function editUser(index) {
+          let information = Data[index];
+          $fName.val(information.Name);
+          $email.val(information.emailVal);
+          $phone.val(information.phoneVal);
+          isEdit = true;
+          editId = index;
+          $submitBtn.text('Update');
+        }
+
+        function deleteUser(index) {
+          Data.splice(index, 1);
+          localStorage.setItem('user', JSON.stringify(Data));
+          showInfo();
+        }
+
+        $('#myForm').on('submit', function (e) {
+          e.preventDefault();
+
+          mainData = localStorage.getItem('user')
+            ? JSON.parse(localStorage.getItem('user'))
+            : [];
+          Data = [...mainData];
+
+          if (Data.length == 0) {
+            idnumber = 1;
+          } else {
+            idnumber = Data[0].id + 1;
+          }
+
+          let information = {
+            id: idnumber,
+            Name: $fName.val(),
+            emailVal: $email.val(),
+            phoneVal: $phone.val(),
+          };
+
+          if (isEdit && editId !== null) {
+            Data[editId] = information;
+            isEdit = false;
+            editId = null;
+            $submitBtn.text('Add User');
+          } else {
+            Data.unshift(information);
+          }
+
+          localStorage.setItem('user', JSON.stringify(Data));
+          showInfo();
+          this.reset();
+        });
 
         showInfo();
-        localStorage.setItem('user', JSON.stringify(Data));
-        document.getElementById('myForm').reset();
       });
-      showInfo();
     </script>
   </body>
 </html>
