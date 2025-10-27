@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LS CRUD</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0px;
+        padding: 0px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px;
+        gap: 30px;
+        min-height: 100vh;
+        background-color: rgb(216, 227, 229);
+      }
+
+      input,
+      button,
+      select,
+      .empty {
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        background: #f4f9ff;
+        padding: 20px;
+        border: solid 1px black;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      /* Table */
+      .container table {
+        border-collapse: collapse;
+        text-align: left;
+      }
+      thead tr th,
+      tbody tr td {
+        border: 1px solid;
+        padding: 3px 15px;
+      }
+
+      form {
+        background-color: #f4f9ff;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        border: solid 1px black;
+        position: sticky;
+        top: 30px;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+      }
+      .inputFieldContainer input,
+      form button {
+        width: 100%;
+      }
+      .inputFieldContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      /* Universal Styles */
+    </style>
+  </head>
+  <body>
+    <form action="#" id="myForm">
+      <div class="inputFieldContainer">
+        <div class="form_control">
+          <label for="fName">Full Name:</label>
+          <input type="text" name="" id="fName" required />
+        </div>
+
+        <div class="form_control">
+          <label for="email">Email:</label>
+          <input type="email" name="" id="email" required />
+        </div>
+
+        <div class="form_control">
+          <label for="phone">Phone:</label>
+          <input type="number" name="" id="phone" required />
+        </div>
+      </div>
+      <footer>
+        <button form="myForm" class="submitBtn">Add User</button>
+      </footer>
+    </form>
+
+    <div class="container">
+      <table><h1>Kaosar</h1>
+        <thead>
+          <tr class="heading">
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody class="userInfo"></tbody>
+      </table>
+    </div>
+
+    <script>
+      // Select Items
+      var crossBtn = document.querySelector('.closeBtn'),
+        fName = document.getElementById('fName'),
+        email = document.getElementById('email'),
+        phone = document.getElementById('phone'),
+        userInfo = document.querySelector('.userInfo'),
+        table = document.querySelector('table');
+      submitBtn = document.querySelector('.submitBtn');
+
+      var mainData = localStorage.getItem('user')
+        ? JSON.parse(localStorage.getItem('user'))
+        : [];
+      Data = [...mainData];
+      isEdit = false;
+      editId = null;
+
+      function showInfo() {
+        userInfo.innerHTML = '';
+        if (Data.length === 0) {
+          userInfo.innerHTML = `<tr><td class="empty" colspan="6" align="center">No data available in table</td></tr>`;
+          return;
+        }
+
+        for (var i = 0; i < Data.length; i++) {
+          const staff = Data[i];
+          userInfo.innerHTML += `<tr class="employeeDetails">
+                  <td>${staff.id}</td>
+                  <td>${staff.Name}</td>
+                  <td>${staff.emailVal}</td>
+                  <td>${staff.phoneVal}</td>
+                  <td>
+                      <button onclick="editInfo(${i})">Edit</button>
+                      <button onclick="deleteInfo(${i})">Delete</button>
+                  </td>
+              </tr>`;
+        }
+      }
+
+      // Edit & Delete Functions
+      function editInfo(i) {
+        isEdit = true;
+        editId = i;
+        const staff = Data[i];
+        fName.value = staff.Name;
+        email.value = staff.emailVal;
+        phone.value = staff.phoneVal;
+        submitBtn.innerHTML = 'Update';
+      }
+
+      function deleteInfo(i) {
+
+          Data.splice(i, 1);
+          localStorage.setItem('user', JSON.stringify(Data));
+          showInfo();
+
+      }
+
+      document.getElementById('myForm').addEventListener('submit', e => {
+        e.preventDefault();
+        mainData = localStorage.getItem('user')
+          ? JSON.parse(localStorage.getItem('user'))
+          : [];
+        Data = [...mainData];
+        if (Data.length == 0) {
+          idnumber = 1;
+        } else {
+          idnumber = Data[0].id + 1;
+        }
+        const information = {
+          id: idnumber,
+          Name: fName.value,
+          emailVal: email.value,
+          phoneVal: phone.value,
+        };
+
+        if (isEdit && editId !== null) {
+          Data[editId] = information;
+        } else {
+          Data.unshift(information);
+        }
+
+        showInfo();
+        localStorage.setItem('user', JSON.stringify(Data));
+        document.getElementById('myForm').reset();
+      });
+      showInfo();
+    </script>
+  </body>
+</html>
