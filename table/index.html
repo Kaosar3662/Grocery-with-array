@@ -82,6 +82,10 @@
         flex-direction: column;
         gap: 8px;
       }
+      .hide {
+        position: absolute;
+        left: 100000%;
+      }
       /* Universal Styles */
     </style>
   </head>
@@ -96,6 +100,10 @@
         <div class="form_control">
           <label for="email">Email:</label>
           <input type="email" name="" id="email" required />
+        </div>
+        <div class="hide">
+          <label for="id">Email:</label>
+          <input type="number" name="" id="id" />
         </div>
 
         <div class="form_control">
@@ -126,6 +134,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       let $fName = $('#fName'),
+        $editId = $('#id'),
         $email = $('#email'),
         $phone = $('#phone'),
         $userInfo = $('.userInfo'),
@@ -167,6 +176,7 @@
 
       function editUser(i) {
         let information = Data[i];
+        $editId.val(information.id);
         $fName.val(information.Name);
         $email.val(information.emailVal);
         $phone.val(information.phoneVal);
@@ -201,9 +211,15 @@
           emailVal: $email.val(),
           phoneVal: $phone.val(),
         };
+        let info = {
+          id: $editId.val(),
+          Name: $fName.val(),
+          emailVal: $email.val(),
+          phoneVal: $phone.val(),
+        };
 
         if (isEdit && editId !== null) {
-          Data[editId] = information;
+          Data[editId] = info;
           isEdit = false;
           editId = null;
           $submitBtn.text('Add User');
