@@ -170,22 +170,22 @@
           });
         }
 
-        // Delegate edit / delete
-        function editUser(index) {
-          let information = Data[index];
+        // Delegate edit / delete (exposed globally so inline onclick handlers work)
+        window.editUser = function (i) {
+          let information = Data[i];
           $fName.val(information.Name);
           $email.val(information.emailVal);
           $phone.val(information.phoneVal);
           isEdit = true;
-          editId = index;
+          editId = i;
           $submitBtn.text('Update');
-        }
+        };
 
-        function deleteUser(index) {
-          Data.splice(index, 1);
+        window.deleteUser = function (i) {
+          Data.splice(i, 1);
           localStorage.setItem('user', JSON.stringify(Data));
           showInfo();
-        }
+        };
 
         $('#myForm').on('submit', function (e) {
           e.preventDefault();
