@@ -86,6 +86,10 @@
         position: absolute;
         left: 100000%;
       }
+      .disabled {
+        pointer-events: none;
+        opacity: 0%;
+      }
       /* Universal Styles */
     </style>
   </head>
@@ -133,12 +137,12 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      let $fName = $('#fName'),
-        $editId = $('#id'),
-        $email = $('#email'),
-        $phone = $('#phone'),
-        $userInfo = $('.userInfo'),
-        $submitBtn = $('.submitBtn');
+      let fName = $('#fName'),
+        EditId = $('#id'),
+        email = $('#email'),
+        phone = $('#phone'),
+        userInfo = $('.userInfo'),
+        submitBtn = $('.submitBtn');
 
       let mainData = localStorage.getItem('user')
         ? JSON.parse(localStorage.getItem('user'))
@@ -148,41 +152,42 @@
       let editId = null;
 
       function showInfo() {
-        $userInfo.empty();
+        userInfo.empty();
         if (Data.length === 0) {
-          $userInfo.html(
+          userInfo.html(
             '<tr><td class="empty" colspan="6" align="center">No data available in table</td></tr>'
           );
           return;
         }
 
         $.each(Data, function (i, information) {
-          let $tr = $('<tr class="employeeDetails">')
-            .append($('<td>').text(information.id))
-            .append($('<td>').text(information.Name))
-            .append($('<td>').text(information.emailVal))
-            .append($('<td>').text(information.phoneVal))
-            .append(
-              $('<td>').append(
-                $('<button>').text('Edit').attr('onclick', `editUser(${i})`),
-                ' ',
-                $('<button>').text('Delete').attr('onclick', `deleteUser(${i})`)
-              )
-            );
-
-          $userInfo.append($tr);
+          let rowHTML = `
+          <tr class="employeeDetails">
+            <td>${information.id}</td>
+            <td>${information.Name}</td>
+            <td>${information.emailVal}</td>
+            <td>${information.phoneVal}</td>
+            <td>
+              <button onclick="editUser(${i})">Edit</button>
+              <button class="deleteBtn" onclick="deleteUser(${i})">Delete</button>
+            </td>
+          </tr>`;
+          userInfo.append(rowHTML);
         });
       }
 
       function editUser(i) {
         let information = Data[i];
-        $editId.val(information.id);
-        $fName.val(information.Name);
-        $email.val(information.emailVal);
-        $phone.val(information.phoneVal);
+        EditId.val(information.id);
+        fName.val(information.Name);
+        email.val(information.emailVal);
+        phone.val(information.phoneVal);
         isEdit = true;
         editId = i;
-        $submitBtn.text('Update');
+        submitBtn.text('Update');
+
+        $('.deleteBtn').eq(i).prop('disabled', true);
+        $('.deleteBtn').eq(i).addClass('disabled');
       }
 
       function deleteUser(i) {
@@ -207,22 +212,22 @@
 
         let information = {
           id: idnumber,
-          Name: $fName.val(),
-          emailVal: $email.val(),
-          phoneVal: $phone.val(),
+          Name: fName.val(),
+          emailVal: email.val(),
+          phoneVal: phone.val(),
         };
         let info = {
-          id: $editId.val(),
-          Name: $fName.val(),
-          emailVal: $email.val(),
-          phoneVal: $phone.val(),
+          id: EditId.val(),
+          Name: fName.val(),
+          emailVal: email.val(),
+          phoneVal: phone.val(),
         };
 
         if (isEdit && editId !== null) {
           Data[editId] = info;
           isEdit = false;
           editId = null;
-          $submitBtn.text('Add User');
+          submitBtn.text('Add User');
         } else {
           Data.unshift(information);
         }
@@ -231,6 +236,7 @@
         showInfo();
         this.reset();
       });
+
       $(function () {
         showInfo();
       });
